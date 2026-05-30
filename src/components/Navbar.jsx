@@ -96,18 +96,6 @@ export default function Navbar() {
 
   if (location.pathname === '/' || location.pathname === '/register') return null
 
-  if (location.pathname.startsWith('/user/')) {
-    return (
-      <nav style={navStyle}>
-        <button onClick={() => navigate(-1)} style={leftLinkStyle}>
-          <BackIcon /> Back
-        </button>
-        <span style={titleStyle}>Profile</span>
-        <div />
-      </nav>
-    )
-  }
-
   const handleLogout = async () => {
     await supabase.auth.signOut()
     navigate('/')
@@ -115,11 +103,11 @@ export default function Navbar() {
 
   if (location.pathname === '/home') {
     return (
-      <nav style={navStyle}>
-        <div />
-        <span style={{ fontSize: '36px', fontWeight: '700', color: '#1A1A1A', fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '4px', textAlign: 'center' }}>mutari</span>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '20px' }}>
-          <Link to="/likes" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', width: '22px', height: '22px', position: 'relative', marginRight: '4px' }}>
+      <nav style={navStyle} className="home-nav">
+        <div className="logo-spacer" />
+        <span className="mutari-logo">mutari</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '20px' }}>
+          <Link to="/likes" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', width: '22px', height: '22px', position: 'relative' }}>
             <LikesIcon />
             {likesCount > 0 && (
               <div style={{ position: 'absolute', top: '-6px', right: '-6px', width: '16px', height: '16px', borderRadius: '50%', backgroundColor: 'var(--accent)', color: 'white', fontSize: '9px', fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -185,6 +173,18 @@ export default function Navbar() {
           <BackIcon /> Feed
         </Link>
         <span style={titleStyle}>Likes</span>
+        <div />
+      </nav>
+    )
+  }
+
+  if (location.pathname.startsWith('/user/')) {
+    return (
+      <nav style={navStyle}>
+        <button onClick={() => navigate(-1)} style={{ ...leftLinkStyle, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Inter, system-ui, sans-serif' }}>
+          <BackIcon /> Back
+        </button>
+        <span style={titleStyle}>Profile</span>
         <div />
       </nav>
     )
