@@ -25,24 +25,12 @@ export default function Likes() {
     fetchData()
   }, [])
 
-  const handleLikeBack = async (like) => {
-    await supabase.from('likes').insert({ from_user_id: user.id, to_user_id: like.from_user_id, item_id: like.item_id })
-    await supabase.from('matches').insert({ item_id: like.item_id, user1_id: user.id, user2_id: like.from_user_id })
-    const { data: existingConv } = await supabase.from('conversations').select('id').or(`and(user1_id.eq.${user.id},user2_id.eq.${like.from_user_id}),and(user1_id.eq.${like.from_user_id},user2_id.eq.${user.id})`)
-    if (!existingConv || existingConv.length === 0) {
-      await supabase.from('conversations').insert({ user1_id: user.id, user2_id: like.from_user_id })
-    }
-    setLikes(prev => prev.filter(l => l.from_user_id !== like.from_user_id))
-    navigate('/chat')
-  }
-
   if (loading) return (
     <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontFamily: 'Inter, system-ui, sans-serif', color: 'var(--accent)', fontSize: '14px' }}>
       Loading...
     </div>
   )
 
-  // Gruppiere likes nach user
   const groupedLikes = likes.reduce((acc, like) => {
     const uid = like.from_user_id
     if (!acc[uid]) acc[uid] = { profile: like.from_profile, items: [], firstLike: like }
@@ -61,64 +49,55 @@ export default function Likes() {
           </svg>
           <p style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-secondary)' }}>No likes yet</p>
           <p style={{ fontSize: '13px', lineHeight: '1.5', color: 'var(--text-secondary)' }}>Start discovering items in the feed and like what you love to get matches.</p>
-          <Link to="/home" className="edit-settings-btn" style={{ marginTop: '8px' }}>
-            Go to Feed
-          </Link>
+          <Link to="/home" className="edit-settings-btn" style={{ marginTop: '8px' }}>Go to Feed</Link>
         </div>
       ) : (
         <div style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {groups.map(group => {
-            const firstItem = group.items[0]
-            const allCovers = group.items.map(like => like.item?.item_images?.find(img => img.is_cover) || like.item?.item_images?.[0]).filter(Boolean)
-            return (
-              <div key={group.profile?.id} style={{ backgroundColor: 'var(--bg-card)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+          {groups.map(group => (
+            <div key={group.profile?.id} style={{ backgroundColor: 'var(--bg-card)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
 
-                {/* User Header */}
-                <div onClick={() => navigate(`/user/${group.profile?.id}`)} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '16px', cursor: 'pointer' }}>
-                  <div style={{ width: '52px', height: '52px', borderRadius: '50%', backgroundColor: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '20px', fontWeight: '700', overflow: 'hidden', flexShrink: 0 }}>
-                    {group.profile?.profile_image_url ? (
-                      <img src={group.profile.profile_image_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    ) : (
-                      group.profile?.username?.[0]?.toUpperCase()
-                    )}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '2px' }}>{group.profile?.username}</p>
-                    <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{group.profile?.city} · {group.items.length} {group.items.length === 1 ? 'item liked' : 'items liked'}</p>
-                  </div>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="9 18 15 12 9 6"/>
-                  </svg>
+              {/* User Header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '16px' }}>
+                <div style={{ width: '52px', height: '52px', borderRadius: '50%', backgroundColor: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '20px', fontWeight: '700', overflow: 'hidden', flexShrink: 0 }}>
+                  {group.profile?.profile_image_url ? (
+                    <img src={group.profile.profile_image_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    group.profile?.username?.[0]?.toUpperCase()
+                  )}
                 </div>
-
-                {/* Item Thumbnails */}
-                <div style={{ display: 'flex', gap: '8px', padding: '0 16px 16px', overflowX: 'auto' }}>
-                  {group.items.map(like => {
-                    const cover = like.item?.item_images?.find(img => img.is_cover) || like.item?.item_images?.[0]
-                    return (
-                      <div key={like.id} style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center', width: '72px' }}>
-                        <div style={{ width: '72px', height: '72px', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#F0F0F0' }}>
-                          {cover ? (
-                            <img src={cover.image_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          ) : (
-                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '24px' }}>◈</div>
-                          )}
-                        </div>
-                        <p style={{ fontSize: '10px', color: 'var(--text-secondary)', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100%' }}>{like.item?.title}</p>
-                      </div>
-                    )
-                  })}
-                </div>
-
-                {/* Like back button */}
-                <div style={{ padding: '0 16px 16px' }}>
-                  <button onClick={() => handleLikeBack(firstItem)} style={{ width: '100%', padding: '12px', borderRadius: '14px', border: 'none', backgroundColor: 'var(--accent)', color: '#FFFFFF', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
-                    Like back
-                  </button>
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '2px' }}>{group.profile?.username}</p>
+                  <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{group.profile?.city} · {group.items.length} {group.items.length === 1 ? 'item liked' : 'items liked'}</p>
                 </div>
               </div>
-            )
-          })}
+
+              {/* Item Thumbnails */}
+              <div style={{ display: 'flex', gap: '8px', padding: '0 16px', overflowX: 'auto' }}>
+                {group.items.map(like => {
+                  const cover = like.item?.item_images?.find(img => img.is_cover) || like.item?.item_images?.[0]
+                  return (
+                    <div key={like.id} style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center', width: '72px' }}>
+                      <div style={{ width: '72px', height: '72px', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#F0F0F0' }}>
+                        {cover ? (
+                          <img src={cover.image_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        ) : (
+                          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '24px' }}>◈</div>
+                        )}
+                      </div>
+                      <p style={{ fontSize: '10px', color: 'var(--text-secondary)', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100%' }}>{like.item?.title}</p>
+                    </div>
+                  )
+                })}
+              </div>
+
+              {/* View Profile Button */}
+              <div style={{ padding: '16px' }}>
+                <button onClick={() => navigate(`/user/${group.profile?.id}`)} style={{ width: '100%', padding: '12px', borderRadius: '14px', border: 'none', backgroundColor: 'var(--accent)', color: '#FFFFFF', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
+                  View Profile
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

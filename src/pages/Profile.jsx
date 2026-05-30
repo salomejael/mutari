@@ -312,7 +312,7 @@ export default function Profile() {
           <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-secondary)', fontSize: '14px' }}>No items yet. Add your first item!</div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            {items.map(item => {
+            {items.filter(item => !editItem || item.id !== editItem.id).map(item => {
               const cover = item.item_images?.find(img => img.is_cover) || item.item_images?.[0]
               return (
                 <div key={item.id} onClick={() => openEdit(item)} style={{ backgroundColor: 'var(--bg)', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', cursor: 'pointer' }}>
