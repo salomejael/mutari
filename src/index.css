@@ -1,0 +1,80 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+:root {
+  --bg: #ffd6ff;
+  --bg-card: #FFFFFF;
+  --bg-input: #F9F9F9;
+  --accent: #B91C1C;
+  --accent-light: #E53935;
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --border: #EEEEEE;
+}
+
+nav a,
+nav button {
+  color: #1A1A1A !important;
+}
+
+nav a svg,
+nav button svg {
+  stroke: #1A1A1A !important;
+}
+
+nav a:hover,
+nav a:hover span,
+nav button:hover {
+  color: var(--accent) !important;
+}
+
+nav a:hover svg,
+nav button:hover svg {
+  stroke: var(--accent) !important;
+}
+
+.edit-settings-btn {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: 1.5px solid var(--accent);
+  background-color: #FFFFFF;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.edit-settings-btn:hover {
+  background-color: var(--accent);
+  color: #FFFFFF;
+}
+
+.leaflet-interactive {
+  stroke: #B91C1C !important;
+}
+
+html, body {
+  overflow: hidden;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+  overflow-y: auto;
+}
