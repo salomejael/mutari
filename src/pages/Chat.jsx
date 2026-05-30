@@ -31,7 +31,12 @@ export default function Chat() {
     fetchMessages(activeConv.id)
     const channel = supabase
       .channel('messages:' + activeConv.id)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: 'conversation_id=eq.' + activeConv.id }, (payload) => {
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'messages',
+        filter: `conversation_id=eq.${activeConv.id}`
+      }, (payload) => {
         setMessages(prev => [...prev, payload.new])
       })
       .subscribe()
