@@ -298,7 +298,7 @@ export default function Home() {
         <div style={{ backgroundColor: 'var(--bg-card)', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 8px 40px rgba(0,0,0,0.08)' }}>
           <div style={{ width: '100%', height: "calc(100vh - 340px)", minHeight: "200px", maxHeight: "420px", position: "relative", overflow: "hidden", backgroundColor: "#F9F9F9" }}>
             {activeImage && (
-              <img src={activeImage.image_url} alt={item.title} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'contain', zIndex: 1 }} />
+              <img src={activeImage.image_url} alt={item.title} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }} />
             )}
             {!activeImage && (
               <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '48px' }}>◈</div>
