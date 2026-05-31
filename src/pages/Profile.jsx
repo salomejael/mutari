@@ -126,6 +126,16 @@ export default function Profile() {
     resetForm()
   }
 
+  const handleDeleteItem = async () => {
+    if (!editItem) return
+    await supabase.from('item_images').delete().eq('item_id', editItem.id)
+    await supabase.from('likes').delete().eq('item_id', editItem.id)
+    await supabase.from('dislikes').delete().eq('item_id', editItem.id)
+    await supabase.from('items').delete().eq('id', editItem.id)
+    await refreshItems()
+    resetForm()
+  }
+
   const refreshItems = async () => {
     const { data: itemsData } = await supabase.from('items').select('*, item_images(*)').eq('user_id', user.id).order('created_at', { ascending: false })
     setItems(itemsData || [])
@@ -306,6 +316,11 @@ export default function Profile() {
             <button onClick={handleSaveClick} disabled={saving} style={{ width: '100%', padding: '16px', borderRadius: '12px', border: 'none', backgroundColor: isValid ? 'var(--accent)' : '#CCCCCC', color: '#FFFFFF', fontSize: '15px', fontWeight: '600', cursor: saving ? 'not-allowed' : 'pointer', opacity: saving ? 0.7 : 1 }}>
               {saving ? 'Saving...' : editItem ? 'Save Changes' : 'Save Item'}
             </button>
+            {editItem && (
+              <button onClick={handleDeleteItem} style={{ width: '100%', padding: '16px', borderRadius: '12px', border: '1.5px solid var(--accent)', backgroundColor: '#FFFFFF', color: 'var(--accent)', fontSize: '15px', fontWeight: '600', cursor: 'pointer', marginTop: '8px' }}>
+                Delete Item
+              </button>
+            )}
           </div>
         )}
 
