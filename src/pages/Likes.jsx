@@ -18,7 +18,17 @@ export default function Likes() {
           .select('*, from_profile:profiles!likes_from_user_id_fkey(id, username, city, profile_image_url), item:items(id, title, condition, size, category, item_images(*))')
           .eq('to_user_id', userData.user.id)
           .order('created_at', { ascending: false })
-        setLikes(data || [])
+
+        // Filtere likes raus wo wir bereits zurueckgeliked haben (= match existiert)
+        const { data: myLikes } = await supabase
+          .from('likes')
+          .select('to_user_id')
+          .eq('from_user_id', userData.user.id)
+
+        const myLikedUserIds = new Set((myLikes || []).map(l => l.to_user_id))
+
+        const filtered = (data || []).filter(like => !myLikedUserIds.has(like.from_user_id))
+        setLikes(filtered)
       }
       setLoading(false)
     }
@@ -55,8 +65,6 @@ export default function Likes() {
         <div style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {groups.map(group => (
             <div key={group.profile?.id} style={{ backgroundColor: 'var(--bg-card)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
-
-              {/* User Header */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '16px' }}>
                 <div style={{ width: '52px', height: '52px', borderRadius: '50%', backgroundColor: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '20px', fontWeight: '700', overflow: 'hidden', flexShrink: 0 }}>
                   {group.profile?.profile_image_url ? (
@@ -71,7 +79,6 @@ export default function Likes() {
                 </div>
               </div>
 
-              {/* Item Thumbnails */}
               <div style={{ display: 'flex', gap: '8px', padding: '0 16px', overflowX: 'auto' }}>
                 {group.items.map(like => {
                   const cover = like.item?.item_images?.find(img => img.is_cover) || like.item?.item_images?.[0]
@@ -90,7 +97,6 @@ export default function Likes() {
                 })}
               </div>
 
-              {/* View Profile Button */}
               <div style={{ padding: '16px' }}>
                 <button onClick={() => navigate(`/user/${group.profile?.id}`)} style={{ width: '100%', padding: '12px', borderRadius: '14px', border: 'none', backgroundColor: 'var(--accent)', color: '#FFFFFF', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
                   View Profile

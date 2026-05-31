@@ -10,6 +10,9 @@ export default function UserProfile() {
   const [selectedItem, setSelectedItem] = useState(null)
   const [imageIndex, setImageIndex] = useState(0)
   const [user, setUser] = useState(null)
+  const [likedItemIds, setLikedItemIds] = useState(new Set())
+  const [hoverDislike, setHoverDislike] = useState(false)
+  const [hoverLike, setHoverLike] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -20,14 +23,19 @@ export default function UserProfile() {
       setProfile(profileData)
       const { data: itemsData } = await supabase.from('items').select('*, item_images(*)').eq('user_id', userId).order('created_at', { ascending: false })
       setItems(itemsData || [])
+      if (userData.user) {
+        const { data: likesData } = await supabase.from('likes').select('item_id').eq('from_user_id', userData.user.id).eq('to_user_id', userId)
+        setLikedItemIds(new Set((likesData || []).map(l => l.item_id)))
+      }
       setLoading(false)
     }
     fetchData()
   }, [userId])
 
-  const handleLikeBack = async (itemId) => {
+  const handleLike = async (itemId) => {
     if (!user) return
     await supabase.from('likes').insert({ from_user_id: user.id, to_user_id: userId, item_id: itemId })
+    setLikedItemIds(prev => new Set([...prev, itemId]))
     const { data: matchCheck } = await supabase.from('likes').select('id').eq('from_user_id', userId).eq('to_user_id', user.id)
     if (matchCheck && matchCheck.length > 0) {
       await supabase.from('matches').insert({ item_id: itemId, user1_id: user.id, user2_id: userId })
@@ -37,6 +45,17 @@ export default function UserProfile() {
       }
       navigate('/chat')
     }
+  }
+
+  const handleDislike = async (itemId) => {
+    if (!user) return
+    await supabase.from('likes').delete().eq('from_user_id', user.id).eq('item_id', itemId)
+    setLikedItemIds(prev => {
+      const next = new Set(prev)
+      next.delete(itemId)
+      return next
+    })
+    setHoverDislike(false)
   }
 
   if (loading) return (
@@ -66,22 +85,25 @@ export default function UserProfile() {
         </div>
       </div>
 
-      {/* Items */}
+      {/* Items Box */}
       <div style={{ margin: '0 24px', backgroundColor: 'var(--bg-card)', borderRadius: '28px', padding: '24px', boxShadow: '0 8px 40px rgba(0,0,0,0.08)' }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '16px' }}>Items ({items.length})</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--text-primary)' }}>Items ({items.length})</h3>
+        </div>
 
-        {/* Selected Item Detail */}
+        {/* Selected Item */}
         {selectedItem && (
-          <div style={{ backgroundColor: 'var(--bg)', borderRadius: '20px', padding: '20px', marginBottom: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--text-primary)' }}>{selectedItem.title}</h3>
-              <button onClick={() => { setSelectedItem(null); setImageIndex(0) }} style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1.5px solid var(--border)', backgroundColor: 'var(--bg-card)', color: 'var(--text-secondary)', fontSize: '16px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                ✕
-              </button>
-            </div>
+          <div style={{ backgroundColor: 'var(--bg-card)', borderRadius: '28px', overflow: 'hidden', marginBottom: '20px', border: likedItemIds.has(selectedItem.id) ? '1.5px solid var(--accent)' : '1.5px solid #ffd6ff', boxShadow: '0 8px 40px rgba(0,0,0,0.08)', position: 'relative' }}>
 
-            {/* Main Image */}
-            <div style={{ width: '100%', height: '320px', position: 'relative', overflow: 'hidden', backgroundColor: '#F9F9F9', borderRadius: '16px', marginBottom: '8px' }}>
+            {/* X Button inside card */}
+            <button
+              onClick={() => { setSelectedItem(null); setImageIndex(0); setHoverDislike(false) }}
+              style={{ position: 'absolute', top: '12px', right: '12px', width: '32px', height: '32px', borderRadius: '50%', border: '1.5px solid var(--border)', backgroundColor: '#FFFFFF', color: 'var(--text-secondary)', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+            >
+              ✕
+            </button>
+
+            <div style={{ width: '100%', height: '300px', position: 'relative', overflow: 'hidden', backgroundColor: '#F9F9F9' }}>
               {activeImage && (
                 <img src={activeImage.image_url} alt={selectedItem.title} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'contain', zIndex: 1 }} />
               )}
@@ -91,48 +113,71 @@ export default function UserProfile() {
                   <div onClick={() => setImageIndex(Math.min(images.length - 1, imageIndex + 1))} style={{ position: 'absolute', right: 0, top: 0, width: '40%', height: '100%', cursor: 'pointer', zIndex: 2 }} />
                 </>
               )}
+              {images.length > 1 && (
+                <div style={{ position: 'absolute', top: '12px', left: '0', right: '0', display: 'flex', justifyContent: 'center', gap: '6px', zIndex: 3 }}>
+                  {images.map((_, i) => (
+                    <div key={i} style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: i === imageIndex ? '#FFFFFF' : 'rgba(255,255,255,0.5)' }} />
+                  ))}
+                </div>
+              )}
             </div>
-
-            {/* Thumbnails */}
             {images.length > 1 && (
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', overflowX: 'auto' }}>
+              <div style={{ display: 'flex', gap: '8px', padding: '12px 16px', overflowX: 'auto', backgroundColor: 'var(--bg-input)' }}>
                 {images.map((img, i) => (
-                  <div key={i} onClick={() => setImageIndex(i)} style={{ width: '56px', height: '56px', borderRadius: '10px', overflow: 'hidden', flexShrink: 0, cursor: 'pointer', border: i === imageIndex ? '2px solid var(--accent)' : '2px solid transparent', opacity: i === imageIndex ? 1 : 0.6 }}>
+                  <div key={i} onClick={() => setImageIndex(i)} style={{ width: '56px', height: '56px', borderRadius: '10px', overflow: 'hidden', flexShrink: 0, cursor: 'pointer', border: i === imageIndex ? '2.5px solid var(--accent)' : '2.5px solid transparent', boxSizing: 'border-box', opacity: i === imageIndex ? 1 : 0.6 }}>
                     <img src={img.image_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                 ))}
               </div>
             )}
-
-            <div style={{ display: 'flex', gap: '6px', marginBottom: '12px', flexWrap: 'wrap' }}>
-              {selectedItem.size && <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)', backgroundColor: 'var(--bg-card)', padding: '4px 12px', borderRadius: '8px' }}>{selectedItem.size}</span>}
-              {selectedItem.condition && <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)', backgroundColor: 'var(--bg-card)', padding: '4px 12px', borderRadius: '8px' }}>{selectedItem.condition}</span>}
+            <div style={{ padding: '20px 24px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                <h2 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--text-primary)' }}>{selectedItem.title}</h2>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                  {selectedItem.size && <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', backgroundColor: 'var(--bg-input)', padding: '4px 10px', borderRadius: '8px' }}>{selectedItem.size}</span>}
+                  {selectedItem.condition && <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', backgroundColor: 'var(--bg-input)', padding: '4px 10px', borderRadius: '8px' }}>{selectedItem.condition}</span>}
+                </div>
+              </div>
+              {selectedItem.description && (
+                <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '16px', lineHeight: '1.5' }}>{selectedItem.description}</p>
+              )}
+              {!likedItemIds.has(selectedItem.id) ? (
+                <button onMouseEnter={() => setHoverLike(true)} onMouseLeave={() => setHoverLike(false)} onClick={() => handleLike(selectedItem.id)} style={{ width: '100%', padding: '14px', borderRadius: '12px', border: '1.5px solid var(--accent)', backgroundColor: hoverLike ? 'var(--accent)' : '#FFFFFF', color: hoverLike ? '#FFFFFF' : 'var(--accent)', fontSize: '14px', fontWeight: '600', cursor: 'pointer', boxSizing: 'border-box' }}>
+                  Like this item
+                </button>
+              ) : (
+                <button
+                  onMouseEnter={() => setHoverDislike(true)}
+                  onMouseLeave={() => setHoverDislike(false)}
+                  onClick={() => handleDislike(selectedItem.id)}
+                  style={{ width: '100%', padding: '14px', borderRadius: '12px', border: hoverDislike ? '1.5px solid var(--accent)' : '1.5px solid transparent', backgroundColor: hoverDislike ? '#FFFFFF' : 'var(--accent)', color: hoverDislike ? 'var(--accent)' : '#FFFFFF', fontSize: '14px', fontWeight: '600', cursor: 'pointer', boxSizing: 'border-box' }}>
+                  {hoverDislike ? 'Dislike' : '♥ Liked'}
+                </button>
+              )}
             </div>
-
-            {selectedItem.description && (
-              <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '16px', lineHeight: '1.5' }}>{selectedItem.description}</p>
-            )}
-
-            <button onClick={() => handleLikeBack(selectedItem.id)} style={{ width: '100%', padding: '14px', borderRadius: '12px', border: 'none', backgroundColor: 'var(--accent)', color: '#FFFFFF', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
-              Like this item
-            </button>
           </div>
         )}
 
+        {/* Items Grid */}
         {items.length === 0 ? (
           <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '14px', padding: '24px 0' }}>No items yet</p>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             {items.filter(item => !selectedItem || item.id !== selectedItem.id).map(item => {
               const cover = item.item_images?.find(img => img.is_cover) || item.item_images?.[0]
-              const isSelected = selectedItem?.id === item.id
+              const isLiked = likedItemIds.has(item.id)
               return (
-                <div key={item.id} onClick={() => { setSelectedItem(isSelected ? null : item); setImageIndex(0) }} style={{ backgroundColor: 'var(--bg)', borderRadius: '16px', overflow: 'hidden', boxShadow: isSelected ? `0 0 0 2px var(--accent)` : '0 2px 12px rgba(0,0,0,0.06)', cursor: 'pointer' }}>
-                  <div style={{ height: '160px', backgroundColor: '#F0F0F0' }}>
+                <div key={item.id} onClick={() => { setSelectedItem(item); setImageIndex(0); setHoverDislike(false) }} style={{ backgroundColor: 'var(--bg-card)', borderRadius: '16px', overflow: 'hidden', border: isLiked ? '1.5px solid var(--accent)' : '1.5px solid #ffd6ff', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', cursor: 'pointer', position: 'relative' }}>
+                  <div style={{ height: '160px', backgroundColor: '#F0F0F0', position: 'relative' }}>
                     {cover ? (
                       <img src={cover.image_url} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     ) : (
                       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', color: 'var(--text-secondary)' }}>◈</div>
+                    )}
+                    {isLiked && (
+                      <div style={{ position: 'absolute', top: '8px', left: '8px', backgroundColor: 'var(--accent)', color: '#FFFFFF', fontSize: '10px', fontWeight: '700', padding: '3px 8px', borderRadius: '20px' }}>
+                        ♥ Liked
+                      </div>
                     )}
                   </div>
                   <div style={{ padding: '10px 12px' }}>

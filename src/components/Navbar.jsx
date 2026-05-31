@@ -88,8 +88,20 @@ export default function Navbar() {
     const fetchLikes = async () => {
       const { data: userData } = await supabase.auth.getUser()
       if (!userData.user) return
-      const { data } = await supabase.from('likes').select('id').eq('to_user_id', userData.user.id)
-      setLikesCount(data?.length || 0)
+
+      const { data: incomingLikes } = await supabase
+        .from('likes')
+        .select('from_user_id')
+        .eq('to_user_id', userData.user.id)
+
+      const { data: myLikes } = await supabase
+        .from('likes')
+        .select('to_user_id')
+        .eq('from_user_id', userData.user.id)
+
+      const myLikedUserIds = new Set((myLikes || []).map(l => l.to_user_id))
+      const openLikes = (incomingLikes || []).filter(l => !myLikedUserIds.has(l.from_user_id))
+      setLikesCount(openLikes.length)
     }
     fetchLikes()
   }, [location.pathname])

@@ -111,27 +111,29 @@ export default function Chat() {
     const otherUserId = getOtherUserId(activeConv)
     return (
       <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg)', fontFamily: 'Inter, system-ui, sans-serif', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ position: 'fixed', top: '0', left: '0', right: '0', backgroundColor: '#ffd6ff', padding: '0 24px', display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', zIndex: '100', height: '64px', boxSizing: 'border-box' }}>
+
+        <div style={{ position: 'fixed', top: '0', left: '0', right: '0', backgroundColor: '#ffd6ff', padding: '0 24px', display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', zIndex: '100', height: '64px', boxSizing: 'border-box' }}>
           <button onClick={() => setActiveConv(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: '#1A1A1A', fontSize: '14px', fontWeight: '500', fontFamily: 'Inter, system-ui, sans-serif' }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="15 18 9 12 15 6"/>
             </svg>
             Back
           </button>
-          <div onClick={() => navigate(`/user/${otherUserId}`)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', cursor: 'pointer' }}>
-            <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '13px', fontWeight: '700', overflow: 'hidden' }}>
-              {otherUser?.profile_image_url ? (
-                <img src={otherUser.profile_image_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              ) : (
-                otherUser?.username?.[0]?.toUpperCase()
-              )}
-            </div>
-            <span style={{ fontSize: '13px', fontWeight: '700', color: '#1A1A1A' }}>{otherUser?.username}</span>
-          </div>
-          <div />
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }} />
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: '80px 24px 100px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div onClick={() => navigate(`/user/${otherUserId}`)} style={{ marginTop: '64px', backgroundColor: '#ffd6ff', padding: '12px 24px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '18px', fontWeight: '700', overflow: 'hidden' }}>
+            {otherUser?.profile_image_url ? (
+              <img src={otherUser.profile_image_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ) : (
+              otherUser?.username?.[0]?.toUpperCase()
+            )}
+          </div>
+          <span style={{ fontSize: '14px', fontWeight: '700', color: '#1A1A1A' }}>{otherUser?.username}</span>
+        </div>
+
+        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 24px 100px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {messages.length === 0 && (
             <div style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '14px', marginTop: '40px' }}>
               Start the conversation!
@@ -181,7 +183,6 @@ export default function Chat() {
         <div style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {conversations.map(conv => {
             const otherUser = getOtherUser(conv)
-            const otherUserId = getOtherUserId(conv)
             const isSwapped = conv.status === 'swapped'
             const isMenuOpen = openMenuId === conv.id
             return (
@@ -202,7 +203,6 @@ export default function Chat() {
                     <polyline points="9 18 15 12 9 6"/>
                   </svg>
                 </div>
-
                 <div style={{ position: 'relative', flexShrink: 0 }}>
                   <button onClick={(e) => { e.stopPropagation(); setOpenMenuId(isMenuOpen ? null : conv.id) }} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '3px' }}>
                     <div style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: '#1A1A1A' }} />

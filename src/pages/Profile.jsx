@@ -315,7 +315,7 @@ export default function Profile() {
             {items.filter(item => !editItem || item.id !== editItem.id).map(item => {
               const cover = item.item_images?.find(img => img.is_cover) || item.item_images?.[0]
               return (
-                <div key={item.id} onClick={() => openEdit(item)} style={{ backgroundColor: 'var(--bg)', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', cursor: 'pointer' }}>
+                <div key={item.id} onClick={() => openEdit(item)} style={{ backgroundColor: 'var(--bg-card)', borderRadius: '16px', overflow: 'hidden', border: '1.5px solid #ffd6ff', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', cursor: 'pointer' }}>
                   <div style={{ height: '160px', backgroundColor: '#F0F0F0' }}>
                     {cover ? (
                       <img src={cover.image_url} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
