@@ -8,6 +8,7 @@ import Settings from './pages/Settings'
 import Likes from './pages/Likes'
 import UserProfile from './pages/UserProfile'
 import Navbar from './components/Navbar'
+import AuthGuard from './components/AuthGuard'
 
 function App() {
   return (
@@ -16,12 +17,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/likes" element={<Likes />} />
-        <Route path="/user/:userId" element={<UserProfile />} />
+        <Route path="/home" element={<AuthGuard><Home /></AuthGuard>} />
+        <Route path="/profile" element={<AuthGuard><Profile /></AuthGuard>} />
+        <Route path="/chat" element={<AuthGuard><Chat /></AuthGuard>} />
+        <Route path="/settings" element={<AuthGuard><Settings /></AuthGuard>} />
+        <Route path="/likes" element={<AuthGuard><Likes /></AuthGuard>} />
+        <Route path="/user/:userId" element={<AuthGuard><UserProfile /></AuthGuard>} />
       </Routes>
     </BrowserRouter>
   )
