@@ -269,7 +269,7 @@ export default function Home() {
 
   return (
     <div
-      style={{ minHeight: '100vh', backgroundColor: 'var(--bg)', fontFamily: 'Inter, system-ui, sans-serif', paddingTop: '80px', paddingBottom: '24px' }}
+      style={{ minHeight: '100vh', backgroundColor: 'var(--bg)', fontFamily: 'Inter, system-ui, sans-serif', paddingTop: '72px', paddingBottom: '16px' }}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
