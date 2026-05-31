@@ -15,6 +15,8 @@ export default function Home() {
   const [filters, setFilters] = useState({ sizes: [], categories: [], conditions: [] })
   const [hasOwnItems, setHasOwnItems] = useState(true)
   const [swipeDir, setSwipeDir] = useState(null)
+  const [likeAnim, setLikeAnim] = useState(false)
+  const [dislikeAnim, setDislikeAnim] = useState(false)
   const touchStartX = useRef(null)
   const touchStartY = useRef(null)
   const cardRef = useRef(null)
@@ -104,6 +106,8 @@ export default function Home() {
   }
 
   const triggerSwipe = (dir) => {
+    if (dir === "right") { setLikeAnim(true); setTimeout(() => setLikeAnim(false), 500) }
+    if (dir === "left") { setDislikeAnim(true); setTimeout(() => setDislikeAnim(false), 400) }
     setSwipeDir(dir)
     setTimeout(() => {
       if (dir === 'right') handleLike()
@@ -348,12 +352,12 @@ export default function Home() {
       )}
 
       <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', padding: '8px 24px' }}>
-        <button onClick={() => triggerSwipe('left')} style={{ width: '64px', height: '64px', borderRadius: '50%', border: '2px solid var(--accent)', backgroundColor: '#FFFFFF', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(185,28,28,0.2)' }}>
+        <button onClick={() => triggerSwipe('left')} className={dislikeAnim ? "btn-shake" : ""} style={{ width: "64px", height: "64px", borderRadius: "50%", border: "2px solid var(--accent)", backgroundColor: "#FFFFFF", cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(185,28,28,0.2)' }}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
           </svg>
         </button>
-        <button onClick={() => triggerSwipe('right')} style={{ width: '64px', height: '64px', borderRadius: '50%', border: 'none', backgroundColor: 'var(--accent)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(185,28,28,0.3)' }}>
+        <button onClick={() => triggerSwipe('right')} className={likeAnim ? "btn-heartbeat" : ""} style={{ width: "64px", height: "64px", borderRadius: "50%", border: "none", backgroundColor: "var(--accent)", cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(185,28,28,0.3)' }}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
           </svg>
