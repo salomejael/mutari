@@ -378,14 +378,20 @@ export default function Home() {
       </div>
 
       {matchUser && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: '200', padding: '24px' }}>
-          <div style={{ backgroundColor: 'var(--bg-card)', borderRadius: '28px', padding: '40px', textAlign: 'center', width: '100%', maxWidth: '360px', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>♥</div>
-            <h2 style={{ fontSize: '26px', fontWeight: '800', color: 'var(--accent)', marginBottom: '8px', fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '2px' }}>Its a Match!</h2>
-            <p style={{ fontSize: '15px', color: 'var(--text-secondary)', marginBottom: '28px' }}>You and <strong style={{ color: 'var(--text-primary)' }}>{matchUser.username}</strong> liked each other</p>
-            <button onClick={() => setMatchUser(null)} style={{ width: '100%', padding: '14px', borderRadius: '12px', border: '1.5px solid var(--border)', backgroundColor: 'transparent', color: 'var(--text-primary)', fontSize: '15px', fontWeight: '600', cursor: 'pointer' }}>
-              Keep Swiping
-            </button>
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(185,28,28,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: '200', padding: '24px' }}>
+          <div style={{ textAlign: 'center', width: '100%', maxWidth: '360px' }}>
+            <div style={{ fontSize: '80px', marginBottom: '8px', animation: 'heartbeat 0.6s ease infinite' }}>♥</div>
+            <h2 style={{ fontSize: '42px', fontWeight: '900', color: '#FFFFFF', marginBottom: '12px', fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '3px', textTransform: 'uppercase' }}>It's a Match!</h2>
+            <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.85)', marginBottom: '8px' }}>You and <strong style={{ color: '#FFFFFF' }}>{matchUser.username}</strong></p>
+            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', marginBottom: '48px' }}>liked each other 🎉</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <button onClick={() => { setMatchUser(null); }} style={{ width: '100%', padding: '16px', borderRadius: '14px', border: 'none', backgroundColor: '#FFFFFF', color: 'var(--accent)', fontSize: '15px', fontWeight: '700', cursor: 'pointer' }}>
+                Send a Message
+              </button>
+              <button onClick={() => setMatchUser(null)} style={{ width: '100%', padding: '16px', borderRadius: '14px', border: '1.5px solid rgba(255,255,255,0.5)', backgroundColor: 'transparent', color: '#FFFFFF', fontSize: '15px', fontWeight: '600', cursor: 'pointer' }}>
+                Keep Swiping
+              </button>
+            </div>
           </div>
         </div>
       )}
