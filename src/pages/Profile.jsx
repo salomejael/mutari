@@ -250,8 +250,8 @@ export default function Profile() {
               <div>
                 <label style={labelStyle}>Size</label>
                 <div style={{ position: 'relative' }}>
-                  <div onClick={() => setOpenDropdown(openDropdown === 'size' ? null : 'size')} style={{ ...inputStyle(errors.size && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 8px', overflow: 'hidden' }}>
-                    <span style={{ color: newItem.size ? 'var(--text-primary)' : 'var(--text-secondary)' }}>{newItem.size || 'Select'}</span>
+                  <div onClick={() => setOpenDropdown(openDropdown === 'size' ? null : 'size')} style={{ ...inputStyle(errors.size && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 8px', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                    <span style={{ color: newItem.size ? 'var(--text-primary)' : 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80%' }}>{newItem.size || 'S'}</span>
                     <span style={{ fontSize: '12px' }}>▾</span>
                   </div>
                   {openDropdown === 'size' && (
@@ -268,8 +268,8 @@ export default function Profile() {
               <div>
                 <label style={labelStyle}>Category</label>
                 <div style={{ position: 'relative' }}>
-                  <div onClick={() => setOpenDropdown(openDropdown === 'category' ? null : 'category')} style={{ ...inputStyle(errors.category && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 8px', overflow: 'hidden' }}>
-                    <span style={{ color: newItem.category ? 'var(--text-primary)' : 'var(--text-secondary)' }}>{newItem.category || 'Select'}</span>
+                  <div onClick={() => setOpenDropdown(openDropdown === 'category' ? null : 'category')} style={{ ...inputStyle(errors.category && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 8px', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                    <span style={{ color: newItem.category ? 'var(--text-primary)' : 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80%' }}>{newItem.category || 'Cat.'}</span>
                     <span style={{ fontSize: '12px' }}>▾</span>
                   </div>
                   {openDropdown === 'category' && (
@@ -286,8 +286,8 @@ export default function Profile() {
               <div>
                 <label style={labelStyle}>Condition</label>
                 <div style={{ position: 'relative' }}>
-                  <div onClick={() => setOpenDropdown(openDropdown === 'condition' ? null : 'condition')} style={{ ...inputStyle(errors.condition && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 8px', overflow: 'hidden' }}>
-                    <span style={{ color: newItem.condition ? 'var(--text-primary)' : 'var(--text-secondary)' }}>{newItem.condition || 'Select'}</span>
+                  <div onClick={() => setOpenDropdown(openDropdown === 'condition' ? null : 'condition')} style={{ ...inputStyle(errors.condition && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 8px', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                    <span style={{ color: newItem.condition ? 'var(--text-primary)' : 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80%' }}>{newItem.condition || 'Cond.'}</span>
                     <span style={{ fontSize: '12px' }}>▾</span>
                   </div>
                   {openDropdown === 'condition' && (
