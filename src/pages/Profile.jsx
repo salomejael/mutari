@@ -141,7 +141,7 @@ export default function Profile() {
     setSaving(false)
   }
 
-  const inputStyle = (hasError) => ({ width: '100%', padding: '14px 16px', borderRadius: '12px', border: `1.5px solid ${hasError ? 'var(--accent)' : 'var(--border)'}`, backgroundColor: 'var(--bg-input)', fontSize: '15px', color: 'var(--text-primary)', outline: 'none', boxSizing: 'border-box', fontFamily: 'Inter, system-ui, sans-serif' })
+  const inputStyle = (hasError) => ({ width: '100%', padding: '14px 10px', borderRadius: '12px', border: `1.5px solid ${hasError ? 'var(--accent)' : 'var(--border)'}`, backgroundColor: 'var(--bg-input)', fontSize: '14px', color: 'var(--text-primary)', outline: 'none', boxSizing: 'border-box', fontFamily: 'Inter, system-ui, sans-serif', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' })
   const labelStyle = { display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }
 
   if (loading) return (
@@ -245,11 +245,11 @@ export default function Profile() {
               <textarea value={newItem.description} onChange={e => { setNewItem({ ...newItem, description: e.target.value }); setErrors(prev => ({ ...prev, description: false })) }} placeholder="Describe the item..." rows={3} style={{ ...inputStyle(errors.description && showErrors), resize: 'none' }} />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginBottom: '20px' }}>
               <div>
                 <label style={labelStyle}>Size</label>
                 <div style={{ position: 'relative' }}>
-                  <div onClick={() => setOpenDropdown(openDropdown === 'size' ? null : 'size')} style={{ ...inputStyle(errors.size && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div onClick={() => setOpenDropdown(openDropdown === 'size' ? null : 'size')} style={{ ...inputStyle(errors.size && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 8px', overflow: 'hidden' }}>
                     <span style={{ color: newItem.size ? 'var(--text-primary)' : 'var(--text-secondary)' }}>{newItem.size || 'Select'}</span>
                     <span style={{ fontSize: '12px' }}>▾</span>
                   </div>
@@ -267,7 +267,7 @@ export default function Profile() {
               <div>
                 <label style={labelStyle}>Category</label>
                 <div style={{ position: 'relative' }}>
-                  <div onClick={() => setOpenDropdown(openDropdown === 'category' ? null : 'category')} style={{ ...inputStyle(errors.category && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div onClick={() => setOpenDropdown(openDropdown === 'category' ? null : 'category')} style={{ ...inputStyle(errors.category && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 8px', overflow: 'hidden' }}>
                     <span style={{ color: newItem.category ? 'var(--text-primary)' : 'var(--text-secondary)' }}>{newItem.category || 'Select'}</span>
                     <span style={{ fontSize: '12px' }}>▾</span>
                   </div>
@@ -285,7 +285,7 @@ export default function Profile() {
               <div>
                 <label style={labelStyle}>Condition</label>
                 <div style={{ position: 'relative' }}>
-                  <div onClick={() => setOpenDropdown(openDropdown === 'condition' ? null : 'condition')} style={{ ...inputStyle(errors.condition && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div onClick={() => setOpenDropdown(openDropdown === 'condition' ? null : 'condition')} style={{ ...inputStyle(errors.condition && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 8px', overflow: 'hidden' }}>
                     <span style={{ color: newItem.condition ? 'var(--text-primary)' : 'var(--text-secondary)' }}>{newItem.condition || 'Select'}</span>
                     <span style={{ fontSize: '12px' }}>▾</span>
                   </div>
