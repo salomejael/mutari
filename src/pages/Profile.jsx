@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../supabase'
 import { Link, useSearchParams } from 'react-router-dom'
+import { compressImage } from '../utils/compressImage'
 
 export default function Profile() {
   const [user, setUser] = useState(null)
@@ -93,7 +94,7 @@ export default function Profile() {
     const { data: itemData } = await supabase.from('items').insert({ user_id: user.id, title: newItem.title, description: newItem.description, size: newItem.size, category: newItem.category, condition: newItem.condition }).select().single()
     if (itemData && newImages.length > 0) {
       for (let i = 0; i < newImages.length; i++) {
-        const file = newImages[i]
+        const file = await compressImage(newImages[i])
         const path = `${user.id}/${itemData.id}/${Date.now()}_${file.name}`
         const { data: uploadData } = await supabase.storage.from('items').upload(path, file)
         if (uploadData) {
@@ -112,7 +113,7 @@ export default function Profile() {
     if (newImages.length > 0) {
       const startIndex = existingImages.length
       for (let i = 0; i < newImages.length; i++) {
-        const file = newImages[i]
+        const file = await compressImage(newImages[i])
         const path = `${user.id}/${editItem.id}/${Date.now()}_${file.name}`
         const { data: uploadData } = await supabase.storage.from('items').upload(path, file)
         if (uploadData) {
