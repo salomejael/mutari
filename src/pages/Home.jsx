@@ -194,7 +194,7 @@ export default function Home() {
   )
 
   const FilterHeader = () => (
-    <div style={{ padding: '16px 24px 0' }}>
+    <div style={{ padding: '8px 24px 0' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         <button onClick={() => { setShowFilters(!showFilters); setActiveFilterGroup(null) }} style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: '600', color: activeFiltersCount > 0 ? 'var(--accent)' : 'var(--text-secondary)', fontFamily: 'Inter, system-ui, sans-serif', flexShrink: 0, padding: 0 }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -294,7 +294,7 @@ export default function Home() {
         </div>
       )}
 
-      <div style={{ margin: '12px 24px', ...swipeStyle }}>
+      <div style={{ margin: '6px 24px', ...swipeStyle }}>
         <div style={{ backgroundColor: 'var(--bg-card)', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 8px 40px rgba(0,0,0,0.08)' }}>
           <div style={{ width: '100%', height: "calc(100vh - 340px)", minHeight: "200px", maxHeight: "420px", position: "relative", overflow: "hidden", backgroundColor: "#F9F9F9" }}>
             {activeImage && (
@@ -356,7 +356,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', padding: '8px 24px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', padding: '4px 24px' }}>
         <button
           className={dislikeAnim ? 'btn-shake' : ''}
           onClick={() => triggerSwipe('left')}
