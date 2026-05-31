@@ -251,13 +251,13 @@ export default function Profile() {
                 <label style={labelStyle}>Size</label>
                 <div style={{ position: 'relative' }}>
                   <div onClick={() => setOpenDropdown(openDropdown === 'size' ? null : 'size')} style={{ ...inputStyle(errors.size && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 8px', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                    <span style={{ color: newItem.size ? 'var(--text-primary)' : 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80%' }}>{newItem.size || 'S'}</span>
+                    <span style={{ color: newItem.size ? 'var(--text-primary)' : 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80%' }}>{newItem.size || '--'}</span>
                     <span style={{ fontSize: '12px' }}>▾</span>
                   </div>
                   {openDropdown === 'size' && (
-                    <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, backgroundColor: 'var(--bg-input)', borderRadius: '12px', border: '1.5px solid var(--border)', zIndex: 10, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                    <div style={{ position: 'absolute', top: '100%', left: 0, minWidth: '120px', backgroundColor: 'var(--bg-input)', borderRadius: '12px', border: '1.5px solid var(--border)', zIndex: 10, overflow: 'visible', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
                       {['XXS','XS','S','M','L','XL','XXL','One Size'].map(size => (
-                        <div key={size} onClick={() => { setNewItem({ ...newItem, size }); setErrors(prev => ({ ...prev, size: false })); setOpenDropdown(null) }} style={{ padding: '8px 16px', fontSize: '14px', cursor: 'pointer', backgroundColor: newItem.size === size ? '#FFF0F0' : 'transparent', color: newItem.size === size ? 'var(--accent)' : 'var(--text-primary)', fontWeight: newItem.size === size ? '600' : '400' }}>
+                        <div key={size} onClick={() => { setNewItem({ ...newItem, size }); setErrors(prev => ({ ...prev, size: false })); setOpenDropdown(null) }} style={{ padding: '8px 16px', fontSize: '14px', cursor: 'pointer', backgroundColor: newItem.size === size ? '#FFF0F0' : 'transparent', color: newItem.size === size ? 'var(--accent)' : 'var(--text-primary)', fontWeight: newItem.size === size ? '600' : '400', whiteSpace: 'nowrap' }}>
                           {size}
                         </div>
                       ))}
@@ -269,13 +269,13 @@ export default function Profile() {
                 <label style={labelStyle}>Category</label>
                 <div style={{ position: 'relative' }}>
                   <div onClick={() => setOpenDropdown(openDropdown === 'category' ? null : 'category')} style={{ ...inputStyle(errors.category && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 8px', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                    <span style={{ color: newItem.category ? 'var(--text-primary)' : 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80%' }}>{newItem.category || 'Cat.'}</span>
+                    <span style={{ color: newItem.category ? 'var(--text-primary)' : 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80%' }}>{newItem.category || '--'}</span>
                     <span style={{ fontSize: '12px' }}>▾</span>
                   </div>
                   {openDropdown === 'category' && (
-                    <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, backgroundColor: 'var(--bg-input)', borderRadius: '12px', border: '1.5px solid var(--border)', zIndex: 10, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                    <div style={{ position: 'absolute', top: '100%', left: 0, minWidth: '120px', backgroundColor: 'var(--bg-input)', borderRadius: '12px', border: '1.5px solid var(--border)', zIndex: 10, overflow: 'visible', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
                       {['Tops','Bottoms','Dresses','Outerwear','Shoes','Accessories'].map(cat => (
-                        <div key={cat} onClick={() => { setNewItem({ ...newItem, category: cat }); setErrors(prev => ({ ...prev, category: false })); setOpenDropdown(null) }} style={{ padding: '8px 16px', fontSize: '14px', cursor: 'pointer', backgroundColor: newItem.category === cat ? '#FFF0F0' : 'transparent', color: newItem.category === cat ? 'var(--accent)' : 'var(--text-primary)', fontWeight: newItem.category === cat ? '600' : '400' }}>
+                        <div key={cat} onClick={() => { setNewItem({ ...newItem, category: cat }); setErrors(prev => ({ ...prev, category: false })); setOpenDropdown(null) }} style={{ padding: '8px 16px', fontSize: '14px', cursor: 'pointer', backgroundColor: newItem.category === cat ? '#FFF0F0' : 'transparent', color: newItem.category === cat ? 'var(--accent)' : 'var(--text-primary)', fontWeight: newItem.category === cat ? '600' : '400', whiteSpace: 'nowrap' }}>
                           {cat}
                         </div>
                       ))}
@@ -287,13 +287,13 @@ export default function Profile() {
                 <label style={labelStyle}>Condition</label>
                 <div style={{ position: 'relative' }}>
                   <div onClick={() => setOpenDropdown(openDropdown === 'condition' ? null : 'condition')} style={{ ...inputStyle(errors.condition && showErrors), cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 8px', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                    <span style={{ color: newItem.condition ? 'var(--text-primary)' : 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80%' }}>{newItem.condition || 'Cond.'}</span>
+                    <span style={{ color: newItem.condition ? 'var(--text-primary)' : 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80%' }}>{newItem.condition || '--'}</span>
                     <span style={{ fontSize: '12px' }}>▾</span>
                   </div>
                   {openDropdown === 'condition' && (
-                    <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, backgroundColor: 'var(--bg-input)', borderRadius: '12px', border: '1.5px solid var(--border)', zIndex: 10, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                    <div style={{ position: 'absolute', top: '100%', left: 0, minWidth: '120px', backgroundColor: 'var(--bg-input)', borderRadius: '12px', border: '1.5px solid var(--border)', zIndex: 10, overflow: 'visible', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
                       {['New','Like New','Good','Fair','Worn'].map(cond => (
-                        <div key={cond} onClick={() => { setNewItem({ ...newItem, condition: cond }); setErrors(prev => ({ ...prev, condition: false })); setOpenDropdown(null) }} style={{ padding: '8px 16px', fontSize: '14px', cursor: 'pointer', backgroundColor: newItem.condition === cond ? '#FFF0F0' : 'transparent', color: newItem.condition === cond ? 'var(--accent)' : 'var(--text-primary)', fontWeight: newItem.condition === cond ? '600' : '400' }}>
+                        <div key={cond} onClick={() => { setNewItem({ ...newItem, condition: cond }); setErrors(prev => ({ ...prev, condition: false })); setOpenDropdown(null) }} style={{ padding: '8px 16px', fontSize: '14px', cursor: 'pointer', backgroundColor: newItem.condition === cond ? '#FFF0F0' : 'transparent', color: newItem.condition === cond ? 'var(--accent)' : 'var(--text-primary)', fontWeight: newItem.condition === cond ? '600' : '400', whiteSpace: 'nowrap' }}>
                           {cond}
                         </div>
                       ))}
