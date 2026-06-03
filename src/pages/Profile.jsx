@@ -90,8 +90,27 @@ export default function Profile() {
   }
 
   const handleAddItem = async () => {
+    if (saving) return
     setSaving(true)
-    const { data: itemData } = await supabase.from('items').insert({ user_id: user.id, title: newItem.title, description: newItem.description, size: newItem.size, category: newItem.category, condition: newItem.condition }).select().single()
+
+    const { data: sessionData } = await supabase.auth.getSession()
+    console.log('Session:', sessionData)
+
+    const { data: itemData, error: itemError } = await supabase
+      .from('items')
+      .insert({
+        user_id: user.id,
+        title: newItem.title,
+        description: newItem.description,
+        size: newItem.size,
+        category: newItem.category,
+        condition: newItem.condition
+      })
+      .select()
+      .single()
+
+    console.log('Insert result:', itemData, itemError)
+
     if (itemData && newImages.length > 0) {
       for (let i = 0; i < newImages.length; i++) {
         const file = await compressImage(newImages[i])
@@ -99,10 +118,16 @@ export default function Profile() {
         const { data: uploadData } = await supabase.storage.from('items').upload(path, file)
         if (uploadData) {
           const { data: urlData } = supabase.storage.from('items').getPublicUrl(path)
-          await supabase.from('item_images').insert({ item_id: itemData.id, image_url: urlData.publicUrl, is_cover: i === 0, order_index: i })
+          await supabase.from('item_images').insert({
+            item_id: itemData.id,
+            image_url: urlData.publicUrl,
+            is_cover: i === 0,
+            order_index: i
+          })
         }
       }
     }
+
     await refreshItems()
     resetForm()
   }
